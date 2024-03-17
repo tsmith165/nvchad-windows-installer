@@ -1,5 +1,5 @@
 // GitHub URL for downloading script and config files:
-// https://github.com/tsmith165/nvchad-windows-installer/raw/main
+// https://github.com/tsmith165/nvchad-windows-installer
 
 const fs = require('fs');
 const path = require('path');

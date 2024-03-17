@@ -34,7 +34,7 @@ Before running the setup script, ensure that your system meets the following req
 
 1. Open Windows Terminal in the directory you want to save the installer
 2. Clone this repository to your local machine:
-   `git clone https://github.com/yourusername/nvchad-windows-installer.git`
+   `git clone https://github.com/tsmith165/nvchad-windows-installer.git`
 
 3. Navigate to the cloned directory:
    `cd nvchad-windows-installer`
