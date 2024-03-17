@@ -62,23 +62,53 @@ function runCommand(command) {
     }
 }
 
-// Install NeoVim
-log('Installing NeoVim...');
-const nvimInstaller = 'nvim-win64.msi';
-const nvimUrl = `https://github.com/neovim/neovim/releases/latest/download/${nvimInstaller}`;
-runCommand(`curl -L -o ${nvimInstaller} ${nvimUrl}`);
-runCommand(`msiexec /i ${nvimInstaller} /qn`);
-fs.unlinkSync(nvimInstaller);
-log('NeoVim installation completed.');
+// Helper function to check if a directory exists
+function directoryExists(dirPath) {
+    try {
+        return fs.statSync(dirPath).isDirectory();
+    } catch (error) {
+        return false;
+    }
+}
 
-// Install msys2 (C++)
-log('Installing msys2...');
-const msys2Installer = 'msys2-x86_64-20240113.exe';
-const msys2Url = `https://github.com/msys2/msys2-installer/releases/download/2024-01-13/${msys2Installer}`;
-runCommand(`curl -L -o ${msys2Installer} ${msys2Url}`);
-runCommand(`${msys2Installer} /S`);
-fs.unlinkSync(msys2Installer);
-log('msys2 installation completed.');
+// Helper function to check if a directory exists
+function directoryExists(dirPath) {
+    try {
+        return fs.statSync(dirPath).isDirectory();
+    } catch (error) {
+        return false;
+    }
+}
+
+// Install NeoVim if not already installed
+log('Checking if NeoVim is installed...');
+const nvimInstallDir = 'C:\\Program Files\\Neovim';
+if (!directoryExists(nvimInstallDir)) {
+    log('Installing NeoVim...');
+    const nvimInstaller = 'nvim-win64.msi';
+    const nvimUrl = `https://github.com/neovim/neovim/releases/latest/download/${nvimInstaller}`;
+    runCommand(`curl -L -o ${nvimInstaller} ${nvimUrl}`);
+    runCommand(`msiexec /i ${nvimInstaller} /qn`);
+    fs.unlinkSync(nvimInstaller);
+    log('NeoVim installation completed.');
+} else {
+    log('NeoVim is already installed.');
+}
+
+// Check if msys2 is installed, if not, download and start the installer
+log('Checking if msys2 is installed...');
+const msys2InstallDir = 'C:\\msys64';
+if (!directoryExists(msys2InstallDir)) {
+    log('Installing msys2...');
+    const msys2Installer = 'msys2-x86_64-20240113.exe';
+    const msys2Url = `https://github.com/msys2/msys2-installer/releases/download/2024-01-13/${msys2Installer}`;
+    runCommand(`curl -L -o ${msys2Installer} ${msys2Url}`);
+    runCommand(`start ${msys2Installer}`);
+    log('Please complete the msys2 installation and run the script again.');
+    process.exit(0);
+} else {
+    log('msys2 is already installed.');
+}
 
 // Set environment variables for msys2
 log('Setting environment variables for msys2...');
@@ -97,27 +127,45 @@ const fontZip = 'JetBrainsMono.zip';
 const fontUrl = 'https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip';
 runCommand(`curl -L -o ${fontZip} ${fontUrl}`);
 runCommand(`tar -xf ${fontZip} -C ${process.env.TEMP}`);
-fs.readdirSync(path.join(process.env.TEMP, 'JetBrainsMono-2.242'))
-    .filter((file) => file.endsWith('.ttf'))
-    .forEach((file) => {
-        fs.copyFileSync(path.join(process.env.TEMP, 'JetBrainsMono-2.242', file), `C:\\Windows\\Fonts\\${file}`);
-    });
-fs.unlinkSync(fontZip);
-fs.rmdirSync(path.join(process.env.TEMP, 'JetBrainsMono-2.242'), { recursive: true });
-log('JetBrains Mono Nerd Font installation completed.');
+
+const extractedFontDir = path.join(process.env.TEMP, 'fonts');
+if (directoryExists(extractedFontDir)) {
+    fs.readdirSync(extractedFontDir)
+        .filter((file) => file.endsWith('.ttf'))
+        .forEach((file) => {
+            fs.copyFileSync(path.join(extractedFontDir, file), `C:\\Windows\\Fonts\\${file}`);
+        });
+    fs.unlinkSync(fontZip);
+    fs.rmdirSync(extractedFontDir, { recursive: true });
+    log('JetBrains Mono Nerd Font installation completed.');
+} else {
+    logError('Failed to extract JetBrains Mono Nerd Font. Skipping font installation.');
+}
 
 // Install NVChad
-log('Installing NVChad...');
+log('Checking if NVChad is installed...');
 const nvimDir = path.join(process.env.LOCALAPPDATA, 'nvim');
+if (directoryExists(nvimDir)) {
+    log('Removing existing NVChad installation...');
+    fs.rmdirSync(nvimDir, { recursive: true });
+    log('Existing NVChad installation removed.');
+}
+
+log('Installing NVChad...');
 runCommand(`git clone -b v2.0 https://github.com/NvChad/NvChad ${nvimDir} --depth 1`);
 log('NVChad installation completed.');
 
 // Configure NVChad / LSPs
 log('Configuring NVChad and LSPs...');
+const customDir = path.join(nvimDir, 'lua', 'custom');
+if (!fs.existsSync(customDir)) {
+    fs.mkdirSync(customDir, { recursive: true });
+}
+
 const configFiles = [
-    { src: 'configs/chadrc.lua', dest: path.join(nvimDir, 'lua', 'custom', 'chadrc.lua') },
-    { src: 'configs/plugins.lua', dest: path.join(nvimDir, 'lua', 'custom', 'plugins.lua') },
-    { src: 'configs/lspconfig.lua', dest: path.join(nvimDir, 'lua', 'plugins', 'configs', 'lspconfig.lua') },
+    { src: path.join(__dirname, 'configs', 'chadrc.lua'), dest: path.join(nvimDir, 'lua', 'custom', 'chadrc.lua') },
+    { src: path.join(__dirname, 'configs', 'plugins.lua'), dest: path.join(nvimDir, 'lua', 'custom', 'plugins.lua') },
+    { src: path.join(__dirname, 'configs', 'lspconfig.lua'), dest: path.join(nvimDir, 'lua', 'plugins', 'configs', 'lspconfig.lua') },
 ];
 
 configFiles.forEach((file) => {

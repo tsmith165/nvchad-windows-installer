@@ -1,0 +1,29 @@
+[2024-03-17T03:56:45.381Z] Node.js version: v18.17.1
+[2024-03-17T03:56:45.993Z] npm version: 9.6.7
+[2024-03-17T03:56:46.024Z] Git version: git version 2.41.0.windows.3
+[2024-03-17T03:56:46.024Z] Checking if NeoVim is installed...
+[2024-03-17T03:56:46.024Z] NeoVim is already installed.
+[2024-03-17T03:56:46.024Z] Checking if msys2 is installed...
+[2024-03-17T03:56:46.025Z] msys2 is already installed.
+[2024-03-17T03:56:46.025Z] Setting environment variables for msys2...
+[2024-03-17T03:56:46.025Z] Environment variables for msys2 set.
+[2024-03-17T03:56:46.025Z] Installing JetBrains Mono Nerd Font...
+[2024-03-17T03:56:46.560Z] Command executed: curl -L -o JetBrainsMono.zip https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip
+[2024-03-17T03:56:46.628Z] Command executed: tar -xf JetBrainsMono.zip -C C:\Users\tassm\AppData\Local\Temp
+[2024-03-17T03:56:46.637Z] JetBrains Mono Nerd Font installation completed.
+[2024-03-17T03:56:46.637Z] Checking if NVChad is installed...
+[2024-03-17T03:56:46.638Z] Removing existing NVChad installation...
+[2024-03-17T03:56:46.650Z] Existing NVChad installation removed.
+[2024-03-17T03:56:46.650Z] Installing NVChad...
+[2024-03-17T03:56:47.489Z] Command executed: git clone -b v2.0 https://github.com/NvChad/NvChad C:\Users\tassm\AppData\Local\nvim --depth 1
+[2024-03-17T03:56:47.489Z] NVChad installation completed.
+[2024-03-17T03:56:47.489Z] Configuring NVChad and LSPs...
+[2024-03-17T03:56:47.491Z] Copied D:\DEV\SCRIPTS\nvchad-windows-installer\configs\chadrc.lua to C:\Users\tassm\AppData\Local\nvim\lua\custom\chadrc.lua
+[2024-03-17T03:56:47.491Z] Copied D:\DEV\SCRIPTS\nvchad-windows-installer\configs\plugins.lua to C:\Users\tassm\AppData\Local\nvim\lua\custom\plugins.lua
+[2024-03-17T03:56:47.492Z] Copied D:\DEV\SCRIPTS\nvchad-windows-installer\configs\lspconfig.lua to C:\Users\tassm\AppData\Local\nvim\lua\plugins\configs\lspconfig.lua
+[2024-03-17T03:56:47.492Z] NVChad and LSPs configuration completed.
+[2024-03-17T03:56:47.492Z] Installing LSPs for Python and TypeScript...
+[2024-03-17T03:56:52.328Z] Command executed: npm install -g pyright
+[2024-03-17T03:56:53.754Z] Command executed: npm install -g typescript-language-server
+[2024-03-17T03:56:53.755Z] LSPs for Python and TypeScript installed.
+[2024-03-17T03:56:53.755Z] Setup completed successfully!
